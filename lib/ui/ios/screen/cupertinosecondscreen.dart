@@ -12,10 +12,10 @@ class CupertinoSecondScreen extends StatelessWidget {
       navigationBar: const CupertinoNavigationBar(
         middle: Text('second screen'),
       ),
-      child: InfiniteListViewBuilder(
+      child: InfiniteListViewBuilder<int>(
         list: AppState.draw.listData.list,
         addData: AppState.draw.listData.getData,
-        listItem: (List<Object> list, int index) {
+        listItem: (List<int> list, int index) {
           return Center(
             child: Text(
               list[index].toString(),

@@ -12,10 +12,10 @@ class MaterialSecondScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('second screen'),
       ),
-      body: InfiniteListViewBuilder(
+      body: InfiniteListViewBuilder<int>(
         list: AppState.draw.listData.list,
         addData: AppState.draw.listData.getData,
-        listItem: (List<Object> list, int index) {
+        listItem: (List<int> list, int index) {
           return Center(
             child: Text(
               list[index].toString(),

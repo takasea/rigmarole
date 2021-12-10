@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart' show AsyncCallback;
 import 'package:flutter/widgets.dart';
 
-class InfiniteListViewBuilder extends StatefulWidget {
+class InfiniteListViewBuilder<T> extends StatefulWidget {
   const InfiniteListViewBuilder({
     Key? key,
     required this.list,
@@ -10,14 +10,15 @@ class InfiniteListViewBuilder extends StatefulWidget {
   })  : assert(list.length > 0),
         super(key: key);
   final AsyncCallback addData;
-  final List<Object> list;
-  final Widget Function(List<Object>, int index) listItem;
+  final List<T> list;
+  final Widget Function(List<T> list, int index) listItem;
   @override
   _InfiniteListViewBuilderState createState() =>
-      _InfiniteListViewBuilderState();
+      _InfiniteListViewBuilderState<T>();
 }
 
-class _InfiniteListViewBuilderState extends State<InfiniteListViewBuilder> {
+class _InfiniteListViewBuilderState<T>
+    extends State<InfiniteListViewBuilder<T>> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
