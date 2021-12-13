@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rigmarole/main.dart' show AppState;
 import 'package:rigmarole/ui/material/screen/materialstepperscreen.dart';
 
 class MaterialProjectScreen extends StatelessWidget {
@@ -25,12 +26,22 @@ class MaterialProjectScreen extends StatelessWidget {
           Flexible(
             flex: 1,
             child: ListView.builder(
+              itemCount: AppState.draw.projects.length,
               itemBuilder: (context, index) {
                 return GestureDetector(
-                  child: Text(index.toString()),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      AppState.draw.projects[index].title,
+                      style: const TextStyle(fontSize: 20),
+                    ),
+                  ),
                   onTap: () {
                     Navigator.pushReplacementNamed(
-                        context, MaterialStepperScreen.name);
+                      context,
+                      MaterialStepperScreen.name,
+                      arguments: index,
+                    );
                   },
                 );
               },
