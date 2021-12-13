@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:rigmarole/main.dart' show AppState;
+import 'package:rigmarole/model/pomodorodata.dart';
 
 import 'package:rigmarole/ui/material/screen/materialpomodoroscreen.dart';
 import 'package:rigmarole/ui/material/screen/materialprojectscreen.dart';
@@ -10,13 +12,23 @@ class MaterialStepperScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final projectIndex = ModalRoute.of(context)!.settings.arguments as int;
     return Scaffold(
       body: Column(
-        children: const [
-          Flexible(
-            flex: 1,
-            child: StepperSection(),
-          ),
+        children: [
+          ProjectTitleSection(
+              title: AppState.draw.projects[projectIndex].title),
+          for (PomodoroData data
+              in AppState.draw.projects[projectIndex].pomodori)
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  Text(data.what, style: const TextStyle(fontSize: 20)),
+                  Text(data.mean, style: const TextStyle(fontSize: 10)),
+                ],
+              ),
+            ),
+          const StepperSection(),
         ],
       ),
       floatingActionButton: Row(
@@ -25,6 +37,25 @@ class MaterialStepperScreen extends StatelessWidget {
           ScreenBackButton(backScreenName: MaterialProjectScreen.name),
           SizedBox(width: 60),
         ],
+      ),
+    );
+  }
+}
+
+class ProjectTitleSection extends StatelessWidget {
+  const ProjectTitleSection({Key? key, required this.title}) : super(key: key);
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 50, 0, 20),
+      child: Center(
+        child: Text(
+          title,
+          style: const TextStyle(fontSize: 30),
+        ),
       ),
     );
   }

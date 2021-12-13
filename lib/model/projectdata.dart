@@ -25,3 +25,37 @@ class ProjectData {
     //TODO:
   }
 }
+
+List<ProjectData> dummyData = [
+  ProjectData(
+    title: 'One',
+    pomodori: [
+      PomodoroData(
+        what: 'what One 1',
+        mean: 'mean One 1',
+      ),
+      PomodoroData(
+        what: 'what One 2',
+        mean: 'mean One 2',
+      ),
+      PomodoroData(
+        what: 'what One 3',
+        mean: 'mean One 3',
+      ),
+    ],
+  ),
+  ProjectData(
+    title: 'Two',
+    pomodori: [
+      PomodoroData(
+        what: 'what Two 1',
+        mean: 'mean Two 1',
+      ),
+    ],
+  ),
+  ProjectData(title: 'Three', pomodori: []),
+  ProjectData(title: 'Four', pomodori: []),
+  ProjectData(title: 'Five', pomodori: []),
+  ProjectData(title: 'Six', pomodori: []),
+  ProjectData(title: 'Seven', pomodori: []),
+];

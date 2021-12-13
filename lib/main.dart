@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'model/projectdata.dart';
+
 import 'utilities/selectuiplatform.dart';
 import 'ui/material/materialappui.dart';
 import 'ui/ios/cupertinoappui.dart';
@@ -7,21 +9,31 @@ import 'ui/ios/cupertinoappui.dart';
 void main() {
   // debugPrintBeginFrameBanner = true;
   // debugPrintRebuildDirtyWidgets = true;
+
+  // const app = App(key: GlobalObjectKey<AppState>('state'), projects: []);
+  // app.projects.addAll(dummyData);
+  // runApp(app);
+
+  //TODO: get DB data
+
   runApp(
-    const App(
-      key: GlobalObjectKey<AppState>('state'),
+    App(
+      key: const GlobalObjectKey<AppState>('state'),
+      projects: dummyData,
     ),
   );
 }
 
 class App extends StatefulWidget {
-  const App({required key}) : super(key: key);
+  const App({required key, required this.projects}) : super(key: key);
+  final List<ProjectData> projects;
   @override
   AppState createState() => AppState();
 }
 
 class AppState extends State<App> with WidgetsBindingObserver {
   final ValueNotifier<int> counter = ValueNotifier<int>(0);
+  late final List<ProjectData> projects;
 
   //TODO : add other state
 
@@ -29,6 +41,7 @@ class AppState extends State<App> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
+    projects = widget.projects;
   }
 
   @override
