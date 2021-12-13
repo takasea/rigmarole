@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'model/countdata.dart';
-
 import 'utilities/selectuiplatform.dart';
 import 'ui/material/materialappui.dart';
 import 'ui/ios/cupertinoappui.dart';
@@ -24,7 +22,6 @@ class App extends StatefulWidget {
 
 class AppState extends State<App> with WidgetsBindingObserver {
   final ValueNotifier<int> counter = ValueNotifier<int>(0);
-  final ListData listData = ListData();
 
   //TODO : add other state
 
