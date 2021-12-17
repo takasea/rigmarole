@@ -12,14 +12,13 @@ class MaterialStepperScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final projectIndex = ModalRoute.of(context)!.settings.arguments as int;
+    final int projectIndex = ModalRoute.of(context)!.settings.arguments as int;
+
     return Scaffold(
       body: Column(
         children: [
-          ProjectTitleSection(
-              title: AppState.draw.projects[projectIndex].title),
-          for (PomodoroData data
-              in AppState.draw.projects[projectIndex].pomodori)
+          ProjectTitleSection(title: AppState.draw.projectNames[projectIndex]),
+          for (PomodoroData data in AppState.draw.project.pomodori)
             SingleChildScrollView(
               child: Column(
                 children: [
@@ -28,7 +27,9 @@ class MaterialStepperScreen extends StatelessWidget {
                 ],
               ),
             ),
-          const StepperSection(),
+          StepperSection(
+            projectIndex: projectIndex,
+          ),
         ],
       ),
       floatingActionButton: Row(
@@ -62,7 +63,9 @@ class ProjectTitleSection extends StatelessWidget {
 }
 
 class StepperSection extends StatefulWidget {
-  const StepperSection({Key? key}) : super(key: key);
+  const StepperSection({Key? key, required this.projectIndex})
+      : super(key: key);
+  final int projectIndex;
 
   @override
   _StepperSectionState createState() => _StepperSectionState();
@@ -87,6 +90,12 @@ class _StepperSectionState extends State<StepperSection> {
             _index += 1;
           });
         }
+
+        AppState.draw.addPomodoro(
+          projectIndex: widget.projectIndex,
+          what: 'what!',
+          mean: 'mean!',
+        );
         Navigator.pushReplacementNamed(context, MaterialPomodoroScreen.name);
       },
       onStepTapped: (int index) {
