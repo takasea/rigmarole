@@ -21,30 +21,12 @@ class MaterialProjectScreen extends StatelessWidget {
               color: const Color(0xFFFFB560),
             ),
           ),
-          //TODO: ProjectListWidget
           //TODO: Round Corner
-          Flexible(
+          const Flexible(
             flex: 1,
-            child: ListView.builder(
-              itemCount: AppState.draw.projects.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      AppState.draw.projects[index].title,
-                      style: const TextStyle(fontSize: 20),
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.pushReplacementNamed(
-                      context,
-                      MaterialStepperScreen.name,
-                      arguments: index,
-                    );
-                  },
-                );
-              },
+            child: ProjectListWidget(
+              key:
+                  GlobalObjectKey<_ProjectListWidgetState>('ProjectListWidget'),
             ),
           ),
         ],
@@ -63,6 +45,46 @@ class MaterialProjectScreen extends StatelessWidget {
   }
 }
 
+class ProjectListWidget extends StatefulWidget {
+  const ProjectListWidget({required Key key}) : super(key: key);
+
+  @override
+  _ProjectListWidgetState createState() => _ProjectListWidgetState();
+}
+
+class _ProjectListWidgetState extends State<ProjectListWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: AppState.draw.projectNames.length,
+      itemBuilder: (context, index) {
+        return GestureDetector(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              AppState.draw.projectNames[index],
+              style: const TextStyle(fontSize: 20),
+            ),
+          ),
+          onTap: () {
+            AppState.draw.readProjectData(AppState.draw.projectNames[index]);
+
+            Navigator.pushReplacementNamed(
+              context,
+              MaterialStepperScreen.name,
+              arguments: index,
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void rebuildWidget() {
+    setState(() {});
+  }
+}
+
 class AddProjectButton extends StatelessWidget {
   const AddProjectButton({Key? key}) : super(key: key);
 
@@ -74,7 +96,15 @@ class AddProjectButton extends StatelessWidget {
         size: 60,
       ),
       onTap: () {
-        print('add project!!!');
+        //TODO: add SnackBar or Dialogs
+        final String title = 'NewProject' +
+            (AppState.draw.projectNames.length + 1).toString() +
+            '!';
+
+        AppState.draw.addProject(title);
+        const GlobalObjectKey<_ProjectListWidgetState>('ProjectListWidget')
+            .currentState!
+            .rebuildWidget();
       },
     );
   }
