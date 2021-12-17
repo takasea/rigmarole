@@ -1,3 +1,5 @@
+import 'dart:async' show unawaited;
+
 import 'package:flutter/foundation.dart' show AsyncCallback;
 import 'package:flutter/widgets.dart';
 
@@ -25,9 +27,11 @@ class _InfiniteListViewBuilderState<T>
       itemCount: widget.list.length,
       itemBuilder: (BuildContext context, int index) {
         if (index == widget.list.length - 1) {
-          widget.addData().then((_) {
-            setState(() {});
-          });
+          unawaited(
+            widget.addData().then((_) {
+              setState(() {});
+            }),
+          );
         }
         return widget.listItem(widget.list, index);
       },
