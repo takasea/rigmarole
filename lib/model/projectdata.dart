@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart' show debugPrint;
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'pomodorodata.dart';
@@ -64,6 +66,17 @@ ProjectData readProjectDataFromSharedPreferences({
   assert(data.pomodoroCount != -1);
   assert(data.startProject.isNotEmpty);
 
+  bool _devPrint() {
+    debugPrint('readProjectDataFromSharedPreferences : ' +
+        projectName +
+        '-' +
+        index.toString() +
+        '-');
+    return true;
+  }
+
+  assert(_devPrint());
+
   return data;
 }
 
@@ -96,6 +109,17 @@ Future<bool> addProjectDataInSharedPreferences(
       title + '-' + projectNames.length.toString() + '-' + 'pomodoroCount',
       project.pomodoroCount);
   assert(['1'].length == 1);
+
+  bool _devPrint() {
+    debugPrint('addProjectDataInSharedPreferences : ' +
+        title +
+        '-' +
+        projectNames.length.toString() +
+        '-');
+    return true;
+  }
+
+  assert(_devPrint());
 
   return true;
 }

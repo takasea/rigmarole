@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'projectdata.dart';
@@ -82,6 +83,21 @@ PomodoroData readPomodoroDataFromSharedPreferences({
         false,
   );
 
+  bool _devPrint() {
+    debugPrint('readPomodoroDataFromSharedPreferences : ' +
+        projectName +
+        '-' +
+        projectIndex.toString() +
+        '-' +
+        'Pomodoro' +
+        '-' +
+        pomodoroIndex.toString() +
+        '-');
+    return true;
+  }
+
+  assert(_devPrint());
+
   return data;
 }
 
@@ -162,6 +178,21 @@ Future<bool> addPomodoroDataInSharedPreferences({
           '-' +
           'markerFlag',
       data.markerFlag);
+
+  bool _devPrint() {
+    debugPrint('addPomodoroDataInSharedPreferences : ' +
+        projectName +
+        '-' +
+        projectIndex.toString() +
+        '-' +
+        'Pomodoro' +
+        '-' +
+        pomodoroCount.toString() +
+        '-');
+    return true;
+  }
+
+  assert(_devPrint());
 
   return true;
 }
