@@ -92,18 +92,20 @@ class AppState extends State<App> with WidgetsBindingObserver {
       sharedPreferences: sharedPreferences,
     );
 
-    void _devPrint() {
-      print('---project---');
-      print(project.title);
-      if (DateTime.parse(project.startProject).isUtc) {
-        print(DateTime.parse(project.startProject));
-      }
-      print(project.pomodoroCount);
-      print(project.randomFlag);
-      print('------------');
+    bool _devPrint() {
+      debugPrint('---readProjectData---');
+      debugPrint('---project---');
+      debugPrint('title : ' + project.title);
+
+      debugPrint(DateTime.parse(project.startProject).toString());
+      debugPrint('pomodoroCount :' + project.pomodoroCount.toString());
+      debugPrint('randomFlag : ' + project.randomFlag.toString());
+      debugPrint('------------');
+      return true;
     }
 
-    _devPrint();
+    assert(_devPrint());
+
     for (int i = 0; i < project.pomodoroCount; i++) {
       project.pomodori.add(_readPomodoroData(
         projectIndex: projectNames.indexOf(projectName),
@@ -121,15 +123,17 @@ class AppState extends State<App> with WidgetsBindingObserver {
       projectIndex: projectIndex,
       pomodoroIndex: pomodoroIndex,
     );
-    void _devPrint() {
-      print('------Pomodoro-------');
-      print(DateTime.parse(data.date));
-      print(data.what);
-      print(data.mean);
-      print(data.markerFlag);
+
+    bool _devPrint() {
+      debugPrint('------Pomodoro-------');
+      debugPrint(DateTime.parse(data.date).toString());
+      debugPrint('what : ' + data.what);
+      debugPrint('mean : ' + data.mean);
+      debugPrint('markerFlag' + data.markerFlag.toString());
+      return true;
     }
 
-    _devPrint();
+    assert(_devPrint());
 
     return data;
   }
