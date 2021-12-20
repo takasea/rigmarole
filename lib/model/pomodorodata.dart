@@ -40,6 +40,29 @@ PomodoroData readPomodoroDataFromSharedPreferences({
   projectIndex++;
   pomodoroIndex++;
 
+  assert(
+    sharedPreferences.containsKey(projectName +
+        '-' +
+        projectIndex.toString() +
+        '-' +
+        'Pomodoro' +
+        '-' +
+        pomodoroIndex.toString() +
+        '-' +
+        'date'),
+    'readPomodoroDataFromSharedPreferences: Key value \'' +
+        projectName +
+        '-' +
+        projectIndex.toString() +
+        '-' +
+        'Pomodoro' +
+        '-' +
+        pomodoroIndex.toString() +
+        '-' +
+        'date' +
+        '\' does not contain SharedPreferences.',
+  );
+
   final data = PomodoroData.fromData(
     date: sharedPreferences.getString(projectName +
             '-' +
