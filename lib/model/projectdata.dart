@@ -50,6 +50,18 @@ ProjectData readProjectDataFromSharedPreferences({
 }) {
   final int index = projectNameIndex + 1;
 
+  assert(
+    sharedPreferences.containsKey(
+        projectName + '-' + index.toString() + '-' + 'startProject'),
+    'readProjectDataFromSharedPreferences: Key value \'' +
+        projectName +
+        '-' +
+        index.toString() +
+        '-' +
+        'startProject' +
+        '\' does not contain SharedPreferences.',
+  );
+
   final ProjectData data = ProjectData.fromData(
     title: projectName,
     startProject: sharedPreferences.getString(
