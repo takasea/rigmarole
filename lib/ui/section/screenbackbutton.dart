@@ -8,11 +8,32 @@ class ScreenBackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      child: const Icon(
-        Icons.arrow_back,
-        size: 60,
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 150, 150, 255),
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black87,
+              offset: Offset(0, 0),
+              blurRadius: 4.0,
+              spreadRadius: 0.3,
+              blurStyle: BlurStyle.outer,
+            ),
+            BoxShadow(
+              color: Color.fromARGB(255, 230, 230, 255),
+              offset: Offset(0.3, 0.0),
+              blurRadius: 1.3,
+              spreadRadius: 1.0,
+              blurStyle: BlurStyle.inner,
+            )
+          ],
+        ),
+        child: const Icon(
+          Icons.arrow_back,
+          size: 60,
+        ),
       ),
-      //TODO: back button design
       //arrow_back
       //arrow_back_ios_new
       //extension_sharp
