@@ -32,6 +32,7 @@ class ScreenBackButton extends StatelessWidget {
         child: const Icon(
           Icons.arrow_back,
           size: 60,
+          color: Color(0xFF505050),
         ),
       ),
       //arrow_back

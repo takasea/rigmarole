@@ -86,5 +86,15 @@ flutter:
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #
+  fonts:
+    - family: SpicyRice
+      fonts:
+        - asset: assets/fonts/spicy_rice/SpicyRice-Regular.ttf
+    - family: Dekko
+      fonts:
+        - asset: assets/fonts/dekko/Dekko-Regular.ttf
+    - family: PressStart2P
+      fonts:
+        - asset: assets/fonts/press_start_2p/PressStart2P-Regular.ttf
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

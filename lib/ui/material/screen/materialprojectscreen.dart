@@ -53,6 +53,8 @@ class ProjectListWidget extends StatefulWidget {
 class _ProjectListWidgetState extends State<ProjectListWidget> {
   final math.Random random = math.Random.secure();
 
+  final ScrollController _controller = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -69,6 +71,7 @@ class _ProjectListWidgetState extends State<ProjectListWidget> {
             )
           ]),
       child: ListView.builder(
+        controller: _controller,
         itemCount: AppState.draw.projectNames.length,
         itemBuilder: (context, index) {
           return GestureDetector(
@@ -97,7 +100,12 @@ class _ProjectListWidgetState extends State<ProjectListWidget> {
   }
 
   void rebuildWidget() {
-    setState(() {});
+    _controller.jumpTo(_controller.position.maxScrollExtent);
+    setState(() {
+      WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+        _controller.jumpTo(_controller.position.maxScrollExtent);
+      });
+    });
   }
 }
 
@@ -136,6 +144,9 @@ class ProjectTile extends StatelessWidget {
         name,
         style: const TextStyle(
           fontSize: 20,
+          fontFamily: 'SpicyRice',
+          color: Color(0xFF505050),
+          letterSpacing: 3,
         ),
       ),
     );
@@ -172,6 +183,7 @@ class AddProjectButton extends StatelessWidget {
         child: const Icon(
           Icons.playlist_add,
           size: 60,
+          color: Color(0xFF505050),
         ),
       ),
       onTap: () {
@@ -219,6 +231,7 @@ class RandomChoiceButton extends StatelessWidget {
         child: const Icon(
           Icons.casino,
           size: 60,
+          color: Color(0xFF505050),
         ),
       ),
       onTap: () {
