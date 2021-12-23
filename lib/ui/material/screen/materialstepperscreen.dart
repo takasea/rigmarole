@@ -15,17 +15,12 @@ class MaterialStepperScreen extends StatelessWidget {
     final int projectIndex = ModalRoute.of(context)!.settings.arguments as int;
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 230, 230, 255),
-      body: Column(
-        children: [
-          ProjectTitleSection(title: AppState.draw.projectNames[projectIndex]),
-          const Flexible(
-            child: PomodoroList(),
-          ),
-        ],
-      ),
+      body: const PomodoroList(),
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
+          ProjectTitleSection(title: AppState.draw.projectNames[projectIndex]),
           const ScreenBackButton(backScreenName: MaterialProjectScreen.name),
           const SizedBox(width: 20),
           AddPomodoroButton(projectIndex: projectIndex),
@@ -42,13 +37,41 @@ class ProjectTitleSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 50, 0, 20),
-      child: Center(
-        child: Text(
-          title,
-          style: const TextStyle(fontSize: 30),
-        ),
+    return Flexible(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 25,
+              backgroundColor: Color.fromARGB(255, 230, 230, 255),
+              color: Color(0xFF505050),
+              letterSpacing: 3,
+              fontFamily: 'SpicyRice',
+            ),
+          ),
+          Flexible(
+            child: Container(
+              color: const Color.fromARGB(255, 230, 230, 255),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Random',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Color(0xFF505050),
+                      fontFamily: 'PressStart2P',
+                    ),
+                  ),
+                  Switch.adaptive(value: true, onChanged: (flag) {})
+                ],
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
@@ -63,6 +86,7 @@ class PomodoroList extends StatefulWidget {
 
 class _PomodoroListState extends State<PomodoroList> {
   final ScrollController _controller = ScrollController();
+  bool _initialFlag = true;
 
   @override
   void initState() {
@@ -80,10 +104,13 @@ class _PomodoroListState extends State<PomodoroList> {
         itemCount: AppState.draw.project.pomodoroCount + 1,
         itemBuilder: (BuildContext context, int i) {
           if (i == AppState.draw.project.pomodoroCount) {
-            WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-              _controller.jumpTo(_controller.position.maxScrollExtent);
-            });
-            return const SizedBox(height: 300);
+            if (_initialFlag == true) {
+              _initialFlag = false;
+              WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+                _controller.jumpTo(_controller.position.maxScrollExtent);
+              });
+            }
+            return const SizedBox(height: 450);
           } else {
             return PomodoroTile(
               what: AppState.draw.project.pomodori[i].what,
@@ -95,8 +122,11 @@ class _PomodoroListState extends State<PomodoroList> {
 }
 
 class PomodoroTile extends StatefulWidget {
-  const PomodoroTile({Key? key, required this.what, required this.mean})
-      : super(key: key);
+  const PomodoroTile({
+    Key? key,
+    required this.what,
+    required this.mean,
+  }) : super(key: key);
   final String what;
   final String mean;
 
@@ -127,20 +157,37 @@ class _PomodoroTileState extends State<PomodoroTile> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Color(0xFF505050),
+            content: Text(
+              'Please Long Press!',
+              style: TextStyle(
+                  fontSize: 15,
+                  color: Color(0xFFFFFFFF),
+                  fontFamily: 'PressStart2P'),
+            ),
+            duration: Duration(milliseconds: 500),
+          ),
+        );
+      },
+      onLongPressStart: (detail) {
         setState(() {
           openFlag = !openFlag;
-          if (openFlag) {
-            text = widget.mean;
-            color = Colors.yellow;
-          } else {
-            text = widget.what;
-            color = Color.fromARGB(
-              0,
-              255 - random.nextInt(128),
-              255 - random.nextInt(128),
-              255,
-            ); //.withOpacity(0.5);
-          }
+          text = widget.mean;
+          color = Colors.yellow;
+        });
+      },
+      onLongPressEnd: (detail) {
+        setState(() {
+          openFlag = !openFlag;
+          text = widget.what;
+          color = Color.fromARGB(
+            0,
+            255 - random.nextInt(128),
+            255 - random.nextInt(128),
+            255,
+          );
         });
       },
       child: AnimatedContainer(
@@ -177,9 +224,22 @@ class _PomodoroTileState extends State<PomodoroTile> {
         ),
         child: Text(
           text,
-          style: const TextStyle(
-            fontSize: 20,
-          ),
+          style: openFlag == false
+              ? const TextStyle(
+                  color: Color(0xFF505050),
+                  fontSize: 20,
+                  fontFamily: 'PressStart2P',
+                )
+              : const TextStyle(
+                  color: Color(0xFF505050),
+                  fontSize: 30,
+                  fontFamily: 'Dekko',
+                ),
+          strutStyle: openFlag == false
+              ? const StrutStyle(
+                  leading: 0.0,
+                )
+              : const StrutStyle(leading: 0.5),
         ),
       ),
     );
@@ -216,8 +276,9 @@ class AddPomodoroButton extends StatelessWidget {
           ],
         ),
         child: const Icon(
-          Icons.add,
+          Icons.add_task,
           size: 60,
+          color: Color(0xFF505050),
         ),
       ),
       onTap: () {
