@@ -12,63 +12,90 @@ class MaterialStepperScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final int projectIndex = ModalRoute.of(context)!.settings.arguments as int;
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 230, 230, 255),
-      body: const PomodoroList(),
-      floatingActionButton: Row(
+      backgroundColor: const Color.fromARGB(255, 255, 250, 150),
+      body: Column(
         mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          ProjectTitleSection(title: AppState.draw.projectNames[projectIndex]),
-          const ScreenBackButton(backScreenName: MaterialProjectScreen.name),
-          const SizedBox(width: 20),
-          AddPomodoroButton(projectIndex: projectIndex),
+        children: const [
+          Flexible(
+            flex: 5,
+            child: PomodoroList(),
+          ),
+          Flexible(
+            flex: 1,
+            child: StepperBottomSection(),
+          ),
         ],
       ),
     );
   }
 }
 
-class ProjectTitleSection extends StatelessWidget {
-  const ProjectTitleSection({Key? key, required this.title}) : super(key: key);
-
-  final String title;
+class StepperBottomSection extends StatelessWidget {
+  const StepperBottomSection({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        color: Color.fromARGB(200, 200, 200, 200),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 10, 0, 40),
+        child: Row(
+          children: const [
+            ProjectTitle(),
+            ScreenBackButton(backScreenName: MaterialProjectScreen.name),
+            SizedBox(width: 20),
+            AddPomodoroButton(),
+            SizedBox(
+              width: 20,
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ProjectTitle extends StatelessWidget {
+  const ProjectTitle({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final int projectIndex = ModalRoute.of(context)!.settings.arguments as int;
+    final String title = AppState.draw.projectNames[projectIndex];
     return Flexible(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             title,
             style: const TextStyle(
               fontSize: 25,
-              backgroundColor: Color.fromARGB(255, 230, 230, 255),
               color: Color(0xFF505050),
               letterSpacing: 3,
               fontFamily: 'SpicyRice',
             ),
           ),
           Flexible(
-            child: Container(
-              color: const Color.fromARGB(255, 230, 230, 255),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Random',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Color(0xFF505050),
-                      fontFamily: 'PressStart2P',
-                    ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Random',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Color(0xFF505050),
+                    fontFamily: 'PressStart2P',
                   ),
-                  Switch.adaptive(value: true, onChanged: (flag) {})
-                ],
-              ),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Switch.adaptive(value: true, onChanged: (flag) {})
+              ],
             ),
           )
         ],
@@ -155,40 +182,27 @@ class _PomodoroTileState extends State<PomodoroTile> {
 
   @override
   Widget build(BuildContext context) {
+    //TODO: add a meta message structure
     return GestureDetector(
       onTap: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            backgroundColor: Color(0xFF505050),
-            content: Text(
-              'Please Long Press!',
-              style: TextStyle(
-                  fontSize: 15,
-                  color: Color(0xFFFFFFFF),
-                  fontFamily: 'PressStart2P'),
-            ),
-            duration: Duration(milliseconds: 500),
-          ),
-        );
-      },
-      onLongPressStart: (detail) {
-        setState(() {
-          openFlag = !openFlag;
-          text = widget.mean;
-          color = Colors.yellow;
-        });
-      },
-      onLongPressEnd: (detail) {
-        setState(() {
-          openFlag = !openFlag;
-          text = widget.what;
-          color = Color.fromARGB(
-            0,
-            255 - random.nextInt(128),
-            255 - random.nextInt(128),
-            255,
-          );
-        });
+        if (openFlag == false) {
+          setState(() {
+            openFlag = !openFlag;
+            text = widget.mean;
+            color = const Color(0xff9afff0);
+          });
+        } else {
+          setState(() {
+            openFlag = !openFlag;
+            text = widget.what;
+            color = Color.fromARGB(
+              0,
+              255 - random.nextInt(128),
+              255 - random.nextInt(128),
+              255,
+            );
+          });
+        }
       },
       child: AnimatedContainer(
         margin: openFlag == false
@@ -247,16 +261,15 @@ class _PomodoroTileState extends State<PomodoroTile> {
 }
 
 class AddPomodoroButton extends StatelessWidget {
-  const AddPomodoroButton({Key? key, required this.projectIndex})
-      : super(key: key);
-  final int projectIndex;
+  const AddPomodoroButton({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final int projectIndex = ModalRoute.of(context)!.settings.arguments as int;
     return GestureDetector(
       child: Container(
         decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 150, 150, 255),
+          color: const Color.fromARGB(255, 255, 180, 100),
           borderRadius: BorderRadius.circular(15),
           boxShadow: const [
             BoxShadow(
@@ -284,9 +297,9 @@ class AddPomodoroButton extends StatelessWidget {
       onTap: () {
         AppState.draw.addPomodoro(
           projectIndex: projectIndex,
-          what: 'what',
+          what: 'whatasdfad',
           mean:
-              'mean:asdfadsfadfasdfasdfasdfasdfasdfadsfasdfasdfadsfadsfadfadfaasdfadfadfaasdfadfa',
+              'mean:asdf adsfadf asdfa sdfasdfa sdfasdf. adsfasdfasdfadsfadsfadfadfaasdfadfadfaasdfadfa',
         );
         Navigator.pushReplacementNamed(context, MaterialPomodoroScreen.name);
       },
