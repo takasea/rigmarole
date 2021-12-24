@@ -27,6 +27,13 @@ class PomodoroData {
   bool markerFlag;
 }
 
+enum kPomodoroData {
+  date,
+  what,
+  mean,
+  makerFlag,
+}
+
 PomodoroData readPomodoroDataFromSharedPreferences({
   required SharedPreferences sharedPreferences,
   required int projectIndex,
@@ -40,86 +47,41 @@ PomodoroData readPomodoroDataFromSharedPreferences({
   projectIndex++;
   pomodoroIndex++;
 
+  String _getKey(String member) {
+    return projectName +
+        '-' +
+        projectIndex.toString() +
+        '-' +
+        'Pomodoro' +
+        '-' +
+        pomodoroIndex.toString() +
+        '-' +
+        member;
+  }
+
   assert(
-    sharedPreferences.containsKey(projectName +
-        '-' +
-        projectIndex.toString() +
-        '-' +
-        'Pomodoro' +
-        '-' +
-        pomodoroIndex.toString() +
-        '-' +
-        'date'),
+    sharedPreferences.containsKey(_getKey(kPomodoroData.date.name)),
     'readPomodoroDataFromSharedPreferences: Key value \'' +
-        projectName +
-        '-' +
-        projectIndex.toString() +
-        '-' +
-        'Pomodoro' +
-        '-' +
-        pomodoroIndex.toString() +
-        '-' +
-        'date' +
+        _getKey(kPomodoroData.date.name) +
         '\' does not contain SharedPreferences.',
   );
 
   final data = PomodoroData.fromData(
-    date: sharedPreferences.getString(projectName +
-            '-' +
-            projectIndex.toString() +
-            '-' +
-            'Pomodoro' +
-            '-' +
-            pomodoroIndex.toString() +
-            '-' +
-            'date') ??
-        '',
-    what: sharedPreferences.getString(projectName +
-            '-' +
-            projectIndex.toString() +
-            '-' +
-            'Pomodoro' +
-            '-' +
-            pomodoroIndex.toString() +
-            '-' +
-            'what') ??
+    date: sharedPreferences.getString(_getKey(kPomodoroData.date.name)) ?? '',
+    what: sharedPreferences.getString(_getKey(kPomodoroData.what.name)) ??
         'oh my god!!!',
-    mean: sharedPreferences.getString(projectName +
-            '-' +
-            projectIndex.toString() +
-            '-' +
-            'Pomodoro' +
-            '-' +
-            pomodoroIndex.toString() +
-            '-' +
-            'mean') ??
-        '',
-    markerFlag: sharedPreferences.getBool(projectName +
-            '-' +
-            projectIndex.toString() +
-            '-' +
-            'Pomodoro' +
-            '-' +
-            pomodoroIndex.toString() +
-            '-' +
-            'makerFlag') ??
-        false,
+    mean: sharedPreferences.getString(_getKey(kPomodoroData.mean.name)) ?? '',
+    markerFlag:
+        sharedPreferences.getBool(_getKey(kPomodoroData.makerFlag.name)) ??
+            false,
   );
 
   bool _devPrint() {
-    debugPrint('readPomodoroDataFromSharedPreferences : ' +
-        projectName +
-        '-' +
-        projectIndex.toString() +
-        '-' +
-        'Pomodoro' +
-        '-' +
-        pomodoroIndex.toString() +
-        '-');
+    debugPrint('readPomodoroDataFromSharedPreferences : ' + _getKey('MEMBER'));
     return true;
   }
 
-  assert(_devPrint());
+  // assert(_devPrint());
 
   return data;
 }
@@ -138,84 +100,48 @@ Future<bool> addPomodoroDataInSharedPreferences({
 
   projectIndex++;
 
-  int pomodoroCount = sharedPreferences.getInt(projectName +
-          '-' +
-          projectIndex.toString() +
-          '-' +
-          'pomodoroCount') ??
-      0;
+  final String _pomodoroCountKey = projectName +
+      '-' +
+      projectIndex.toString() +
+      '-' +
+      kProjectData.pomodoroCount.name;
 
+  int pomodoroCount = sharedPreferences.getInt(_pomodoroCountKey) ?? 0;
   pomodoroCount++;
-
-  await sharedPreferences.setInt(
-      projectName + '-' + projectIndex.toString() + '-' + 'pomodoroCount',
-      pomodoroCount);
+  await sharedPreferences.setInt(_pomodoroCountKey, pomodoroCount);
 
   //add data
   final PomodoroData data = PomodoroData(what: what, mean: mean);
-
-  await sharedPreferences.setString(
-      projectName +
-          '-' +
-          projectIndex.toString() +
-          '-' +
-          'Pomodoro' +
-          '-' +
-          pomodoroCount.toString() +
-          '-' +
-          'date',
-      data.date);
-
-  await sharedPreferences.setString(
-      projectName +
-          '-' +
-          projectIndex.toString() +
-          '-' +
-          'Pomodoro' +
-          '-' +
-          pomodoroCount.toString() +
-          '-' +
-          'what',
-      data.what);
-
-  await sharedPreferences.setString(
-      projectName +
-          '-' +
-          projectIndex.toString() +
-          '-' +
-          'Pomodoro' +
-          '-' +
-          pomodoroCount.toString() +
-          '-' +
-          'mean',
-      data.mean);
-
-  await sharedPreferences.setBool(
-      projectName +
-          '-' +
-          projectIndex.toString() +
-          '-' +
-          'Pomodoro' +
-          '-' +
-          pomodoroCount.toString() +
-          '-' +
-          'markerFlag',
-      data.markerFlag);
-
-  bool _devPrint() {
-    debugPrint('addPomodoroDataInSharedPreferences : ' +
-        projectName +
+  String _getKey(String member) {
+    return projectName +
         '-' +
         projectIndex.toString() +
         '-' +
         'Pomodoro' +
         '-' +
         pomodoroCount.toString() +
-        '-');
+        '-' +
+        member;
+  }
+
+  await sharedPreferences.setString(
+      _getKey(kPomodoroData.date.name), data.date);
+
+  await sharedPreferences.setString(
+      _getKey(kPomodoroData.what.name), data.what);
+
+  await sharedPreferences.setString(
+      _getKey(kPomodoroData.mean.name), data.mean);
+
+  await sharedPreferences.setBool(
+      _getKey(kPomodoroData.makerFlag.name), data.markerFlag);
+
+  bool _devPrint() {
+    debugPrint('addPomodoroDataInSharedPreferences : ' + _getKey('MEMBER'));
     return true;
   }
 
-  assert(_devPrint());
+  // assert(_devPrint());
 
   return true;
 }

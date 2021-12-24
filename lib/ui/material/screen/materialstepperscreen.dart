@@ -82,8 +82,8 @@ class ProjectTitle extends StatelessWidget {
           Flexible(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
+              children: const [
+                Text(
                   'Random',
                   style: TextStyle(
                     fontSize: 13,
@@ -91,10 +91,10 @@ class ProjectTitle extends StatelessWidget {
                     fontFamily: 'PressStart2P',
                   ),
                 ),
-                const SizedBox(
+                SizedBox(
                   width: 10,
                 ),
-                Switch.adaptive(value: true, onChanged: (flag) {})
+                RandomFlagSwitch(),
               ],
             ),
           )
@@ -304,5 +304,26 @@ class AddPomodoroButton extends StatelessWidget {
         Navigator.pushReplacementNamed(context, MaterialPomodoroScreen.name);
       },
     );
+  }
+}
+
+class RandomFlagSwitch extends StatefulWidget {
+  const RandomFlagSwitch({Key? key}) : super(key: key);
+
+  @override
+  _RandomFlagSwitchState createState() => _RandomFlagSwitchState();
+}
+
+class _RandomFlagSwitchState extends State<RandomFlagSwitch> {
+  @override
+  Widget build(BuildContext context) {
+    return Switch.adaptive(
+        value: AppState.draw.project.randomFlag,
+        onChanged: (flag) {
+          setState(() {
+            AppState.draw.changeRandomFlag(
+                projectName: AppState.draw.project.projectName);
+          });
+        });
   }
 }
