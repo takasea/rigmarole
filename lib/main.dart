@@ -6,7 +6,7 @@ import 'model/pomodorodata.dart';
 
 import 'utilities/selectuiplatform.dart';
 import 'ui/material/materialappui.dart';
-import 'ui/ios/cupertinoappui.dart';
+// import 'ui/ios/cupertinoappui.dart';
 
 void main() async {
   // debugPrintBeginFrameBanner = true;
@@ -62,7 +62,7 @@ class AppState extends State<App> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return const SelectPlatformUI(
-      platformIOS: CupertinoAppUI(),
+      // platformIOS: CupertinoAppUI(),
       defaultUI: MaterialAppUI(),
     );
   }
