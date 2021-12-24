@@ -6,31 +6,41 @@ import 'pomodorodata.dart';
 
 class ProjectData {
   ProjectData({
-    required this.title,
+    required this.projectName,
     required this.pomodori,
-    this.randomFlag = false,
+    this.randomFlag = true,
   })  : startProject = DateTime.now().toUtc().toString(),
         pomodoroCount = 0,
-        assert(title.isNotEmpty && title.length < 15);
+        assert(projectName.isNotEmpty && projectName.length < 15);
 
   ProjectData.fromData({
     required this.startProject,
-    required this.title,
+    required this.projectName,
     required this.pomodori,
     required this.pomodoroCount,
     required this.randomFlag,
   })  : assert(DateTime.parse(startProject).isUtc),
-        assert(title.length < 15);
+        assert(projectName.length < 15);
 
   final String startProject; // DateTime.parse(startProject)
-  final String title;
+  final String projectName;
   final List<PomodoroData> pomodori;
   int pomodoroCount;
   bool randomFlag;
 }
 
+enum kProjects { projectNames }
+
+enum kProjectData {
+  startProject,
+  projectName,
+  pomodori,
+  pomodoroCount,
+  randomFlag,
+}
+
 List<String> projectNamesInitialize(SharedPreferences sharedPreferences) {
-  return sharedPreferences.getStringList('projectNames') ?? [];
+  return sharedPreferences.getStringList(kProjects.projectNames.name) ?? [];
 }
 
 String readProjectName({
@@ -38,7 +48,8 @@ String readProjectName({
   required int projectIndex,
 }) {
   final List<String> projects =
-      sharedPreferences.getStringList('projectNames') ?? ['nothing'];
+      sharedPreferences.getStringList(kProjects.projectNames.name) ??
+          ['nothing'];
 
   return projects[projectIndex];
 }
@@ -50,44 +61,38 @@ ProjectData readProjectDataFromSharedPreferences({
 }) {
   final int index = projectNameIndex + 1;
 
+  String _getKey(String member) {
+    return projectName + '-' + index.toString() + '-' + member;
+  }
+
   assert(
-    sharedPreferences.containsKey(
-        projectName + '-' + index.toString() + '-' + 'startProject'),
+    sharedPreferences.containsKey(_getKey(kProjectData.startProject.name)),
     'readProjectDataFromSharedPreferences: Key value \'' +
-        projectName +
-        '-' +
-        index.toString() +
-        '-' +
-        'startProject' +
+        _getKey(kProjectData.startProject.name) +
         '\' does not contain SharedPreferences.',
   );
 
   final ProjectData data = ProjectData.fromData(
-    title: projectName,
-    startProject: sharedPreferences.getString(
-            projectName + '-' + index.toString() + '-' + 'startProject') ??
-        '',
-    pomodoroCount: sharedPreferences.getInt(
-            projectName + '-' + index.toString() + '-' + 'pomodoroCount') ??
-        -1,
+    projectName: projectName,
+    startProject:
+        sharedPreferences.getString(_getKey(kProjectData.startProject.name)) ??
+            '',
+    pomodoroCount:
+        sharedPreferences.getInt(_getKey(kProjectData.pomodoroCount.name)) ??
+            -1,
     pomodori: [],
-    randomFlag: sharedPreferences.getBool(
-            projectName + '-' + index.toString() + '-' + 'randomFlag') ??
-        false,
+    randomFlag:
+        sharedPreferences.getBool(_getKey(kProjectData.randomFlag.name)) ??
+            false,
   );
   assert(data.pomodoroCount != -1);
   assert(data.startProject.isNotEmpty);
 
   bool _devPrint() {
-    debugPrint('readProjectDataFromSharedPreferences : ' +
-        projectName +
-        '-' +
-        index.toString() +
-        '-');
+    debugPrint('readProjectDataFromSharedPreferences : ' + _getKey('MEMBER'));
     return true;
   }
-
-  assert(_devPrint());
+  // assert(_devPrint());
 
   return data;
 }
@@ -98,40 +103,61 @@ Future<bool> addProjectDataInSharedPreferences(
     required SharedPreferences sharedPreferences}) async {
   //add project name in SharedPreferences
   final List<String> projectNames =
-      sharedPreferences.getStringList('projectNames') ?? [];
+      sharedPreferences.getStringList(kProjects.projectNames.name) ?? [];
 
   projectNames.add(title);
 
-  await sharedPreferences.setStringList('projectNames', projectNames);
+  await sharedPreferences.setStringList(
+      kProjects.projectNames.name, projectNames);
 
-  final ProjectData project = ProjectData(title: title, pomodori: []);
+  final ProjectData project = ProjectData(projectName: title, pomodori: []);
 
   // add ProjectData in SharedPreferences
   //
   // Even if they have the same project name,
   // they will not be mixed because of the position of the list.
-  await sharedPreferences.setString(
-      title + '-' + projectNames.length.toString() + '-' + 'startProject',
-      project.startProject);
+  String _getKey(String member) {
+    return title + '-' + projectNames.length.toString() + '-' + member;
+  }
 
+  await sharedPreferences.setString(
+      _getKey(kProjectData.startProject.name), project.startProject);
   await sharedPreferences.setBool(
-      title + '-' + projectNames.length.toString() + '-' + 'randomFlag',
-      project.randomFlag);
+      _getKey(kProjectData.randomFlag.name), project.randomFlag);
   await sharedPreferences.setInt(
-      title + '-' + projectNames.length.toString() + '-' + 'pomodoroCount',
-      project.pomodoroCount);
+      _getKey(kProjectData.pomodoroCount.name), project.pomodoroCount);
   assert(['1'].length == 1);
 
   bool _devPrint() {
-    debugPrint('addProjectDataInSharedPreferences : ' +
-        title +
-        '-' +
-        projectNames.length.toString() +
-        '-');
+    debugPrint('addProjectDataInSharedPreferences : ' + _getKey('MEMBER'));
+    return true;
+  }
+  // assert(_devPrint());
+
+  return true;
+}
+
+void changeRandomFlagInSharedPreferences(
+    {required SharedPreferences sharedPreferences,
+    required String projectName}) async {
+  final List<String> projectNames =
+      sharedPreferences.getStringList(kProjects.projectNames.name) ?? [];
+
+  final String _key = projectName +
+      '-' +
+      (projectNames.indexOf(projectName) + 1).toString() +
+      '-' +
+      kProjectData.randomFlag.name;
+
+  final bool _current = sharedPreferences.getBool(_key) ?? true;
+
+  bool _devPrint() {
+    debugPrint('changeRandomFlagInSharedPreferences' + _key.toString());
+    debugPrint('current:' + _current.toString());
     return true;
   }
 
-  assert(_devPrint());
+  // assert(_devPrint());
 
-  return true;
+  await sharedPreferences.setBool(_key, !_current);
 }

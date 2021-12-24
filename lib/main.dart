@@ -43,7 +43,7 @@ class AppState extends State<App> with WidgetsBindingObserver {
   late final SharedPreferences sharedPreferences;
   late final List<String> projectNames;
 
-  ProjectData project = ProjectData(title: 'init', pomodori: []);
+  ProjectData project = ProjectData(projectName: 'init', pomodori: []);
 
   @override
   void initState() {
@@ -95,7 +95,7 @@ class AppState extends State<App> with WidgetsBindingObserver {
     bool _devPrint() {
       debugPrint('---readProjectData---');
       debugPrint('---project---');
-      debugPrint('title : ' + project.title);
+      debugPrint('title : ' + project.projectName);
 
       debugPrint(DateTime.parse(project.startProject).toString());
       debugPrint('pomodoroCount :' + project.pomodoroCount.toString());
@@ -149,5 +149,11 @@ class AppState extends State<App> with WidgetsBindingObserver {
       what: what,
       mean: mean,
     );
+  }
+
+  void changeRandomFlag({required String projectName}) {
+    project.randomFlag = !project.randomFlag;
+    changeRandomFlagInSharedPreferences(
+        sharedPreferences: sharedPreferences, projectName: projectName);
   }
 }

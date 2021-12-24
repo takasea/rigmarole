@@ -8,7 +8,7 @@ void main() {
 
     //add another project
     projects.add(ProjectData(
-      title: 'one',
+      projectName: 'one',
       pomodori: [],
     ));
 
@@ -20,13 +20,13 @@ void main() {
           ),
         );
 
-    expect(projects[0].title, 'one');
+    expect(projects[0].projectName, 'one');
     expect(projects[0].pomodori[0].what, 'one what 1');
     expect(projects[0].pomodori[0].mean, 'one mean 1');
 
     // same thing
     for (ProjectData project in projects) {
-      expect(project.title, 'one');
+      expect(project.projectName, 'one');
       // print(project.title);
       for (PomodoroData pomodoro in project.pomodori) {
         expect(DateTime.parse(pomodoro.date).isUtc, true);
